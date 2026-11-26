@@ -1,4 +1,4 @@
-import { tr, localized, getLanguage } from './i18n.js';
+import { tr, localized, getLanguage } from './i18n.js?v=dashboard-20261127';
 
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const checkedUrl = value => { try { const url = new URL(value); return url.protocol === 'https:' && !url.username && !url.password ? escapeHtml(url.href) : '#'; } catch { return '#'; } };

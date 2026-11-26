@@ -1,9 +1,9 @@
-import { defaultFilters, filterLaptops, rankLaptops, getRecommendationReasons } from './catalog.js';
-import { tr, translateDOM, getLanguage, setLanguage, localized } from './i18n.js';
-import { initChat } from './chat-ui.js';
-import { socialPaths } from './social-icons.js';
-import { buildInfoContent } from './info-content.js';
-import initDashboard from './dashboard.js';
+import { defaultFilters, filterLaptops, rankLaptops, getRecommendationReasons } from './catalog.js?v=dashboard-20261127';
+import { tr, translateDOM, getLanguage, setLanguage, localized } from './i18n.js?v=dashboard-20261127';
+import { initChat } from './chat-ui.js?v=dashboard-20261127';
+import { socialPaths } from './social-icons.js?v=dashboard-20261127';
+import { buildInfoContent } from './info-content.js?v=dashboard-20261127';
+import initDashboard from './dashboard.js?v=dashboard-20261127';
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
