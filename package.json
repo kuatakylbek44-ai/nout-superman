@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Kazakh laptop discovery and comparison website",
+  "description": "Kazakh, Russian and English laptop discovery with Superman on-device AI",
   "scripts": {
     "start": "node server.mjs",
     "test": "node --test tests/*.test.mjs"

@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;650;700;750;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="upgrade.css">
   <script type="module" src="app.js"></script>
 </head>
 <body>
@@ -19,22 +20,22 @@
     <div class="container nav">
       <a class="logo" href="#" aria-label="Nout басты бет"><span class="logo-icon" data-icon="laptop"></span>nout<span class="logo-dot">.</span></a>
       <nav class="nav-links" aria-label="Негізгі навигация"><a class="active" href="#catalog">Каталог</a><button data-action="how">Қалай таңдаймыз?</button><button data-action="about">Деректер туралы</button></nav>
-      <div class="nav-actions"><button class="icon-button saved-nav" data-action="saved" aria-label="Таңдаулылар" aria-pressed="false"><span data-icon="heart"></span><span id="saved-count" class="nav-count" hidden>0</span></button><button class="compare-nav" data-action="compare"><span data-icon="compare"></span><span>Салыстыру</span><b id="compare-count">0</b></button><span class="lang">ҚАЗ</span></div>
+      <div class="nav-actions"><button class="icon-button saved-nav" data-action="saved" aria-label="Таңдаулылар" aria-pressed="false"><span data-icon="heart"></span><span id="saved-count" class="nav-count" hidden>0</span></button><button class="compare-nav" data-action="compare"><span data-icon="compare"></span><span>Салыстыру</span><b id="compare-count">0</b></button><select class="language-select" id="language-select" aria-label="Тілді таңдау"><option value="kk">ҚАЗ</option><option value="ru">РУС</option><option value="en">ENG</option></select></div>
     </div>
   </header>
   <main>
     <section class="hero container">
       <div class="hero-copy">
         <div class="eyebrow"><span class="eyebrow-icon" data-icon="sparkles"></span> ТАҢДАУ ҚИЫН БОЛМАУЫ КЕРЕК</div>
-        <h1>Ноутбук көп.<br>Саған сайы — <span>біреу.</span></h1>
+        <h1><span class="hero-line">Ноутбук көп.</span><br><span class="hero-line">Саған сайы —</span> <span>біреу.</span></h1>
         <p>Оқуға, жұмысқа, үлкен идеяларға.<br>Қажетіңді айт — өзіңе сай ноутбукті бірге табайық.</p>
         <div class="hero-buttons"><button class="button primary" data-action="wizard"><span data-icon="sparkles"></span> Маған таңдап бер</button><a class="button secondary" href="#catalog">Каталогты көру</a></div>
         <div class="hero-note"><span data-icon="check-circle"></span> Тегін. Түсінікті. Сенің таңдауың.</div>
       </div>
-      <div class="hero-visual" aria-label="Ноутбуктің көркем иллюстрациясы">
+      <div class="hero-visual" aria-label="ASUS ROG Zephyrus G14">
         <div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div><span class="orbit-star star-one">✳</span><span class="orbit-star star-two">+</span>
         <div class="float-label label-top"><span class="tiny-icon" data-icon="cpu"></span><div>Сенің мақсатың.<strong>Сенің ноутбугің.</strong></div></div>
-        <img class="hero-laptop" src="assets/laptop-hero.svg" width="800" height="550" alt="Жасыл және көк түсті экраны бар ноутбук иллюстрациясы">
+        <img class="hero-laptop real-hero" src="assets/photos/rog-zephyrus-g14.png" width="800" height="550" alt="ASUS ROG Zephyrus G14">
         <div class="float-label label-bottom"><span class="check-bubble" data-icon="check"></span><div><strong>Дәл саған сай</strong><span>Артық шығынсыз таңдау</span></div></div>
         <div class="visual-caption">Жақсы таңдау осы жерден басталады.</div>
       </div>
@@ -44,14 +45,18 @@
       <div class="section-top"><div><span class="section-kicker">ӘР МАҚСАТҚА — ӨЗ НОУТБУГІ</span><h2 id="purpose-title">Қай іске керек?</h2></div><span class="section-aside">Бір бағытты таңда. Қалғанын біз реттейміз.</span></div>
       <div class="purpose-grid" id="purpose-grid"></div>
     </section>
+    <section class="container brand-section" aria-labelledby="brand-title"><div class="section-top"><div><span class="section-kicker">БРЕНДІҢДІ ТАҢДА</span><h2 id="brand-title">Сен ұнататын брендтер.</h2></div><span class="brand-total" id="brand-total"></span></div><div id="brand-strip" class="brand-strip" aria-label="Бренд"></div></section>
+    <section class="container superman-banner"><div class="superman-mark" aria-hidden="true">S</div><div><span class="section-kicker">SUPERMAN — СЕНІҢ AI КӨМЕКШІҢ</span><h2>Сұра. Түсін. Таңда.</h2><p>Ноутбук туралы сұрағыңды өз тіліңде қой. Superman каталогтағы модельдерге сүйеніп көмектеседі.</p></div><button class="button primary" data-action="chat"><span data-icon="sparkles"></span> Superman-мен сөйлесу</button></section>
     <section class="catalog-section container" id="catalog" aria-labelledby="catalog-title">
       <div class="catalog-heading"><div><span class="section-kicker">ТАҢДАУ ӨЗ ҚОЛЫҢДА</span><h2 id="catalog-title">Өз ноутбугіңді тап<span class="lime-dot">.</span></h2></div><button class="text-button" data-action="about"><span data-icon="info"></span> Деректер мен бағалар туралы</button></div>
-      <div class="catalog-toolbar"><div class="search-box"><span data-icon="search"></span><input type="search" id="search" placeholder="Модель, бренд немесе процессор іздеу…" aria-label="Ноутбук іздеу"><kbd>/</kbd></div><button class="mobile-filters button secondary" data-action="filters"><span data-icon="sliders"></span> Сүзгілер</button><label class="sort-control"><span>Реттеу:</span><select id="sort" aria-label="Нәтижелерді реттеу"><option value="recommended">Ұсынылғандар</option><option value="price-asc">Алдымен арзаны</option><option value="price-desc">Алдымен қымбаты</option><option value="newest">Жаңа модельдер</option><option value="weight">Алдымен жеңілі</option></select></label></div>
+      <div class="catalog-toolbar"><div class="search-box"><span data-icon="search"></span><input type="search" id="search" placeholder="Модель, бренд немесе процессор іздеу…" aria-label="Ноутбук іздеу"><kbd>/</kbd></div><button class="mobile-filters button secondary" data-action="filters" aria-expanded="false"><span data-icon="sliders"></span> Сүзгілер</button><label class="sort-control"><span>Реттеу:</span><select id="sort" aria-label="Нәтижелерді реттеу"><option value="popular">Танымалдары алдымен</option><option value="recommended">Ұсынылғандар</option><option value="price-asc">Алдымен арзаны</option><option value="price-desc">Алдымен қымбаты</option><option value="newest">Жаңа модельдер</option><option value="weight">Алдымен жеңілі</option></select></label></div>
       <div class="catalog-layout">
         <aside class="filters" id="filters" aria-label="Ноутбук сүзгілері">
           <div class="filter-heading"><h3><span data-icon="sliders"></span> Сүзгілер</h3><button class="text-button" data-action="reset">Тазалау</button></div>
           <div class="filter-group"><label for="budget">Бюджет <span class="muted">дейін</span></label><div class="budget-value"><span id="budget-display">2 000 000</span><span>₸</span></div><input id="budget" type="range" min="150000" max="2000000" step="50000" value="2000000"><div class="range-labels"><span>150 000 ₸</span><span>2 млн ₸</span></div><div class="budget-presets"><button data-budget="300000">300 мың</button><button data-budget="500000">500 мың</button><button data-budget="800000">800 мың</button></div><small>Бағалар — бюджет жоспарлауға арналған бағдар.</small></div>
-          <div class="filter-group"><label for="ram">Жедел жад (RAM)</label><select id="ram"><option value="0">Кез келген</option value="8">8 ГБ және одан көп</option><option value="16">16 ГБ және одан көп</option><option value="24">24 ГБ және одан көп</option><option value="32">32 ГБ және одан көп</option><option value="64">64 ГБ және одан көп</option></select></div>
+          <div class="filter-group"><label for="collection">Каталог бөлімі</label><select id="collection"><option value="all">Жаңа және мұрағат</option><option value="manufacturer">Тексерілген жаңа модельдер</option><option value="archive">Мұрағаттағы модельдер</option></select><label class="check-row"><input type="checkbox" id="photo-only"><span>Тек фотосы бар</span></label></div>
+          <div class="filter-group"><label for="condition">Күйі</label><select id="condition"><option value="all">Барлық күй</option><option value="New">Жаңа</option><option value="Refurbished">Қалпына келтірілген</option></select></div>
+          <div class="filter-group"><label for="ram">Жедел жад (RAM)</label><select id="ram"><option value="0">Кез келген</option><option value="8">8 ГБ және одан көп</option><option value="16">16 ГБ және одан көп</option><option value="24">24 ГБ және одан көп</option><option value="32">32 ГБ және одан көп</option><option value="64">64 ГБ және одан көп</option></select></div>
           <div class="filter-group"><label for="gpu">Видеокарта</label><select id="gpu"><option value="all">Кез келген</option><option value="integrated">Кіріктірілген</option><option value="discrete">Дискретті · NVIDIA / AMD</option></select></div>
           <div class="filter-group"><label for="cpu">Процессор</label><select id="cpu"><option value="all">Кез келген</option><option value="intel">Intel</option><option value="amd">AMD</option><option value="apple">Apple Silicon</option><option value="qualcomm">Qualcomm Snapdragon</option></select></div>
           <div class="filter-group"><label for="gpu-model">Графика сериясы</label><select id="gpu-model"><option value="">Кез келген</option><option value="RTX 50">NVIDIA RTX 50 сериясы</option><option value="RTX 40">NVIDIA RTX 40 сериясы</option><option value="Radeon">AMD Radeon</option><option value="Intel">Intel Graphics / Arc</option><option value="Apple">Apple GPU</option><option value="Adreno">Qualcomm Adreno</option></select></div>
@@ -67,12 +72,15 @@
     </section>
     <section class="container bottom-cta"><div class="cta-icon" data-icon="sparkles"></div><div><h2>Техниканы емес, мүмкіндігіңді таңда.</h2><p>Бірнеше сұрақ. Түсінікті ұсыныстар. Өзіңе сенімді таңдау.</p></div><button class="button primary" data-action="wizard">Маған таңдап бер</button></section>
   </main>
-  <footer class="container footer"><a class="logo" href="#"><span class="logo-icon" data-icon="laptop"></span>nout<span class="logo-dot">.</span></a><p>Саналы таңдауға арналған шағын көмекші.</p><button class="text-button" data-action="about">Каталог және дереккөздер</button><span>Қазақстан · 2026</span></footer>
+  <section class="creator-section container"><div class="creator-intro"><span class="section-kicker">Сайт авторы</span><h2>Қуат Ақылбек<span class="lime-dot">.</span></h2><span class="creator-handle">@ayazbala</span><h3>Идеяң бар ма? Байланысайық.</h3><p>Ноутбук таңдауды қарапайым еткім келеді. Сұрақ, ұсыныс немесе серіктестік болса — жаза бер.</p><a class="portfolio-link" href="https://ayazbala-portfolio.kuatakylbek44.chatgpt.site/" target="_blank" rel="noopener noreferrer">Portfolio</a></div><div class="social-grid" id="social-links"></div></section>
+  <footer class="container footer"><a class="logo" href="#"><span class="logo-icon" data-icon="laptop"></span>nout<span class="logo-dot">.</span></a><p>Саналы таңдауға арналған шағын көмекші.</p><a class="text-button" href="https://github.com/kuatakylbek44-ai/nout-superman" target="_blank" rel="noopener noreferrer">Жоба GitHub-та</a><button class="text-button" data-action="about">Каталог және дереккөздер</button><span>Қазақстан · 2026</span></footer>
   <div class="compare-dock" id="compare-dock" hidden><div><span data-icon="compare"></span><strong id="dock-count">0 ноутбук</strong><span class="dock-hint">Салыстыруға дайын</span></div><div id="dock-models"></div><button class="button primary" data-action="compare">Салыстыру</button><button class="icon-button" data-action="clear-compare" aria-label="Салыстыру тізімін тазалау"><span data-icon="x"></span></button></div>
   <dialog id="detail-dialog" class="dialog detail-dialog"></dialog>
   <dialog id="compare-dialog" class="dialog comparison-dialog"></dialog>
   <dialog id="wizard-dialog" class="dialog wizard-dialog"></dialog>
   <dialog id="info-dialog" class="dialog info-dialog"></dialog>
+  <button class="chat-launcher" data-action="chat" aria-label="Superman-мен сөйлесу"><span class="superman-mark" aria-hidden="true">S</span><span>Superman <small>AI</small></span></button>
+  <dialog id="chat-dialog" class="dialog chat-dialog" aria-labelledby="chat-title"><div class="chat-head"><span class="superman-mark" aria-hidden="true">S</span><div><h2 id="chat-title">Superman</h2><p>Ноутбук таңдаудағы AI көмекшің</p></div><button class="icon-button" data-action="chat-reset" aria-label="Жаңа әңгіме"><span data-icon="reset"></span></button><button class="icon-button" data-action="close" aria-label="Терезені жабу"><span data-icon="x"></span></button></div><div class="chat-messages" id="chat-messages" role="log" aria-live="polite"></div><div class="chat-setup" id="chat-setup"><span class="chat-engine-label">Qwen · WebLLM · On-device AI</span><p>Алғашқы іске қосуда модель жүктеледі. WebGPU қолдайтын браузер қажет.</p><small>Жүктеу тек осы батырманы басқанда басталады. Жауаптар құрылғыңда есептеледі.</small><button class="button primary" data-action="chat-start">AI-ды іске қосу</button><div id="chat-progress" role="status"></div></div><div class="chat-prompts" id="chat-prompts"></div><form id="chat-form" class="chat-form"><label class="sr-only" for="chat-input">Сұрағыңды жаз…</label><textarea id="chat-input" placeholder="Сұрағыңды жаз…" maxlength="2000" rows="2" disabled></textarea><button class="chat-send" id="chat-send" type="submit" disabled aria-label="Жіберу"><span data-icon="send"></span></button></form><div class="chat-bottom"><span id="chat-status">AI қосылмаған</span><button id="chat-stop" data-action="chat-stop" hidden>Тоқтату</button></div><p class="chat-disclaimer">Superman қателесуі мүмкін. Баға мен сипаттаманы дереккөзден тексер.</p></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 </body>
 </html>

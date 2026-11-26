@@ -88,3 +88,73 @@ test('functions do not mutate input, return original objects, and explanations u
   assert.deepEqual(filterLaptops(), []);
   assert.deepEqual(rankLaptops(), []);
 });
+
+const mixedCollection = [
+  { ...models[0], id: 'modern-photo', sourceKind: 'manufacturer', image: 'assets/photos/modern.webp', popularityStars: 5 },
+  { ...models[2], id: 'modern-no-photo', sourceKind: 'manufacturer', image: null, popularityStars: 5 },
+  { ...models[0], id: 'archive-new-photo', sourceKind: 'archive', sourceCondition: 'New', image: 'assets/photos/archive.webp', price: null, year: null, weight: null, os: null, popularityStars: 5 },
+  { ...models[0], id: 'archive-refurb-photo', sourceKind: 'archive', sourceCondition: 'Refurbished', image: 'assets/photos/refurb.webp', price: null, year: null, weight: null, os: null, popularityStars: 4 },
+  { ...models[1], id: 'archive-refurb-no-photo', sourceKind: 'archive', sourceCondition: 'Refurbished', image: null, price: null, year: null, weight: null, os: null, popularityStars: 5 },
+];
+
+test('manufacturer and archival collections combine with brand and hardware filters', () => {
+  assert.equal(filterLaptops(mixedCollection).length, 5);
+  assert.deepEqual(ids(filterLaptops(mixedCollection, { sourceKind: 'manufacturer' })), ['modern-photo', 'modern-no-photo']);
+  assert.deepEqual(ids(filterLaptops(mixedCollection, {
+    sourceKind: 'archive', brands: ['ASUS'], gpuType: 'discrete', minRam: 32,
+  })), ['archive-refurb-no-photo']);
+  assert.deepEqual(filterLaptops(mixedCollection, { sourceKind: 'manufacturer', brands: ['ASUS'] }), []);
+});
+
+test('condition uses the case-sensitive source enum and composes with collection', () => {
+  assert.deepEqual(ids(filterLaptops(mixedCollection, { sourceKind: 'archive', condition: 'New' })), ['archive-new-photo']);
+  assert.deepEqual(ids(filterLaptops(mixedCollection, { condition: 'Refurbished' })), ['archive-refurb-no-photo', 'archive-refurb-photo']);
+  assert.deepEqual(filterLaptops(mixedCollection, { sourceKind: 'manufacturer', condition: 'Refurbished' }), []);
+  assert.deepEqual(filterLaptops(mixedCollection, { condition: 'refurbished' }), []);
+  assert.deepEqual(ids(filterLaptops(mixedCollection, { sourceKind: 'archive', condition: 'all' })), ['archive-new-photo', 'archive-refurb-no-photo', 'archive-refurb-photo']);
+});
+
+test('photo-only uses linked product assets and composes with collection and condition', () => {
+  const withLegacyMetadata = [
+    ...mixedCollection,
+    { ...mixedCollection[4], id: 'metadata-only', image: undefined, imageUrl: 'https://example.com/photo.jpg', imageKind: 'gaming' },
+  ];
+  assert.deepEqual(ids(filterLaptops(withLegacyMetadata, { photoOnly: true })), ['modern-photo', 'archive-new-photo', 'archive-refurb-photo']);
+  assert.deepEqual(ids(filterLaptops(withLegacyMetadata, {
+    photoOnly: true, sourceKind: 'archive', condition: 'Refurbished', brands: ['Lenovo'],
+  })), ['archive-refurb-photo']);
+  assert.equal(filterLaptops(withLegacyMetadata, { photoOnly: false }).length, withLegacyMetadata.length);
+});
+
+test('popular is the default order, with manufacturer/photo/year tie-breaks', () => {
+  assert.equal(defaultFilters.sort, 'popular');
+  const choices = [
+    { ...mixedCollection[0], id: 'four-star', popularityStars: 4, ram: 128, storage: 4096 },
+    { ...mixedCollection[2], id: 'archive-five-star', popularityStars: 5 },
+    { ...mixedCollection[0], id: 'older-photo', year: 2025, popularityStars: 5 },
+    { ...mixedCollection[0], id: 'newest-no-photo', year: 2026, image: null, popularityStars: 5 },
+    { ...mixedCollection[0], id: 'newest-photo', year: 2026, popularityStars: 5 },
+  ];
+  const originalOrder = ids(choices);
+  const expected = ['newest-photo', 'older-photo', 'newest-no-photo', 'archive-five-star', 'four-star'];
+  assert.deepEqual(ids(filterLaptops(choices)), expected);
+  assert.deepEqual(ids(filterLaptops(choices, { sort: 'popular' })), expected);
+  assert.deepEqual(ids(choices), originalOrder);
+});
+
+test('archival unknowns stay discoverable but cannot satisfy current-price, OS, or weight requirements', () => {
+  assert.equal(filterLaptops(mixedCollection, { sourceKind: 'archive' }).length, 3);
+  for (const requirement of [{ maxPrice: 1000000 }, { maxWeight: 2.5 }, { os: 'Windows' }]) {
+    assert.deepEqual(filterLaptops(mixedCollection, { sourceKind: 'archive', ...requirement }), []);
+  }
+});
+
+test('GPU-series filtering recognizes archive GPU names with or without spaces', () => {
+  const choices = [
+    { ...models[1], id: 'rtx-spaced', gpu: 'NVIDIA RTX 4060' },
+    { ...models[1], id: 'rtx-compact', gpu: 'RTX4060' },
+    { ...models[1], id: 'older-series', gpu: 'RTX3060' },
+  ];
+  assert.deepEqual(new Set(ids(filterLaptops(choices, { gpuQuery: 'RTX 40' }))), new Set(['rtx-spaced', 'rtx-compact']));
+  assert.deepEqual(ids(filterLaptops(choices, { gpuQuery: 'RTX 30' })), ['older-series']);
+});
