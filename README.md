@@ -16,6 +16,7 @@ Open [http://127.0.0.1:4173](http://127.0.0.1:4173). Open the site through this 
 
 ## Features
 
+- Use the dark dashboard with orange accents, a mobile sidebar and an optional light theme. The overview shows actual catalog counts, clickable brand bars and verified photo coverage; saved-laptop counts update as you browse.
 - Switch between Қазақша, Русский and English; the selected language is remembered in the browser.
 - Browse **1,993 configurations across 27 brands**, with clickable brand filters and editorial popularity ordering.
 - Choose student, developer, office, creative, gaming or budget use cases.
@@ -130,7 +131,7 @@ npm test
 On Windows, `npm.cmd test` avoids PowerShell script-policy issues. The equivalent direct command is:
 
 ```sh
-node --test tests/catalog.test.mjs tests/data.test.mjs tests/chat.test.mjs tests/superman-engine.test.mjs
+node --test tests/catalog.test.mjs tests/data.test.mjs tests/dashboard.test.mjs tests/chat.test.mjs tests/superman-engine.test.mjs
 ```
 
 The tests cover combined filters, unknown values, ranking, catalog provenance and deduplication, historical price handling, localized AI requests, CORS, request limits, fabricated IDs, explicit model loading and unsupported GPU behavior. Provider calls and model inference are mocked. Browser layout, real downloads and actual model output need separate manual verification.
@@ -141,6 +142,7 @@ The tests cover combined filters, unknown values, ranking, catalog provenance an
 | --- | --- |
 | `dist/index.html`, `dist/styles.css`, `dist/app.js` | Static interface and interactions |
 | `dist/i18n.js`, `dist/info-content.js` | Three-language UI and catalog explanation |
+| `dist/dashboard.css`, `dist/dashboard.js` | Dark/light dashboard, catalogue metrics, brand chart and mobile navigation |
 | `dist/catalog.js`, `dist/data.json` | Filter/ranking logic and bundled catalog |
 | `dist/assets/photos/` | Available real product photographs |
 | `dist/profile.json` | Public owner/contact information |
