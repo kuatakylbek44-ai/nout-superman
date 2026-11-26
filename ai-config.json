@@ -1,0 +1,8 @@
+{
+  "mode": "browser",
+  "endpoint": "",
+  "model": "Qwen3-0.6B-q4f16_1-MLC",
+  "runtimeVersion": "0.2.89",
+  "estimatedDownloadMB": 370,
+  "estimatedGpuMemoryMB": 1404
+}

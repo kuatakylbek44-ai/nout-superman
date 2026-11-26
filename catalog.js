@@ -13,7 +13,10 @@ export const defaultFilters = Object.freeze({
   maxScreen: 0,
   maxWeight: 0,
   brands: Object.freeze([]),
-  sort: 'recommended',
+  sort: 'popular',
+  sourceKind: 'all',
+  condition: 'all',
+  photoOnly: false,
   savedOnly: false,
   savedIds: Object.freeze([]),
 });
@@ -73,7 +76,8 @@ export function filterLaptops(laptops = [], filters = {}) {
   const maxWeight = number(options.maxWeight);
   const minScreen = number(options.minScreen);
   const maxScreen = number(options.maxScreen);
-  const gpuQuery = text(options.gpuQuery).trim();
+  // Source listings use both "RTX4060" and "RTX 4060" for the same GPU.
+  const gpuQuery = text(options.gpuQuery).replace(/\s+/gu, '');
   const result = laptops.filter(laptop => {
     if (!laptop || typeof laptop !== 'object') return false;
     if (terms.length && !terms.every(term => searchText(laptop).includes(term))) return false;
@@ -84,16 +88,20 @@ export function filterLaptops(laptops = [], filters = {}) {
     if (minStorage && number(laptop.storage) < minStorage) return false;
     if (maxWeight && (!positive(laptop.weight) || Number(laptop.weight) > maxWeight)) return false;
     if (options.gpuType && options.gpuType !== 'all' && laptop.gpuType !== options.gpuType) return false;
-    if (gpuQuery && !text(laptop.gpu).includes(gpuQuery)) return false;
+    if (gpuQuery && !text(laptop.gpu).replace(/\s+/gu, '').includes(gpuQuery)) return false;
     if (options.cpuFamily && options.cpuFamily !== 'all' && laptop.cpuFamily !== options.cpuFamily) return false;
     if (options.os && options.os !== 'all' && laptop.os !== options.os) return false;
     if (minScreen && number(laptop.screen) < minScreen) return false;
     if (maxScreen && (!positive(laptop.screen) || Number(laptop.screen) > maxScreen)) return false;
     if (brands.size && !brands.has(text(laptop.brand))) return false;
     if (options.savedOnly && !savedIds.has(laptop.id)) return false;
+    if (options.sourceKind && options.sourceKind !== 'all' && laptop.sourceKind !== options.sourceKind) return false;
+    if (options.condition && options.condition !== 'all' && (laptop.sourceCondition || 'New') !== options.condition) return false;
+    if (options.photoOnly && !laptop.image) return false;
     return true;
   });
   switch (options.sort) {
+    case 'popular': return result.sort((a,b) => number(b.popularityStars)-number(a.popularityStars) || Number(b.sourceKind==='manufacturer')-Number(a.sourceKind==='manufacturer') || Number(Boolean(b.image))-Number(Boolean(a.image)) || number(b.year)-number(a.year) || String(a.name).localeCompare(String(b.name)));
     case 'price-asc': return result.sort((a, b) => ascendingKnown(a, b, 'price'));
     case 'price-desc': return result.sort((a, b) => {
       if (!positive(a.price) || !positive(b.price)) return ascendingKnown(a, b, 'price');
