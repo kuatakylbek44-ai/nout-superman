@@ -3,6 +3,7 @@ import { tr, translateDOM, getLanguage, setLanguage, localized } from './i18n.js
 import { initChat } from './chat-ui.js';
 import { socialPaths } from './social-icons.js';
 import { buildInfoContent } from './info-content.js';
+import initDashboard from './dashboard.js';
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -12,6 +13,9 @@ const size = value => value == null ? tr('Нақтыланады') : tr(value >=
 const weight = value => value == null ? tr('Нақтыланады') : tr(`≈ ${String(value).replace('.', ',')} кг`);
 const safeUrl = value => { try { const u = new URL(value); return u.protocol === 'https:' ? esc(u.href) : '#'; } catch { return '#'; } };
 const paths = {
+  menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/>',
+  camera:'<path d="M8 5 9.5 3h5L16 5h4a2 2 0 0 1 2 2v12H2V7a2 2 0 0 1 2-2Z"/><circle cx="12" cy="12" r="4"/>',
   laptop:'<rect x="4" y="3" width="16" height="13" rx="2"/><path d="M2 20h20M9 20h6"/>',
   heart:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/>',
   compare:'<path d="M5 20V9M12 20V4M19 20V12M2 9h6M9 4h6M16 12h6"/>',
@@ -115,6 +119,7 @@ function render() {
   $('#catalog-footnote').textContent=`${Math.min(visibleCount,result.length)} / ${result.length} көрсетілді · Бағалар — шартты бюджет бағдары. Мұрағат бөлек белгіленген.`;
   updateGlobalState();
   translateDOM();
+  document.dispatchEvent(new CustomEvent('nout:catalog',{detail:{data,savedCount:saved.size,comparedCount:compared.size,filters}}));
 }
 function updateGlobalState() {
   $('#saved-count').textContent=saved.size; $('#saved-count').hidden=saved.size===0;
@@ -178,6 +183,7 @@ document.addEventListener('click',event=>{
   const priority=event.target.closest('[data-wizard-priority]');if(priority){wizard.priority=priority.dataset.wizardPriority;renderWizard();return;}
   const button=event.target.closest('[data-action]');if(!button)return;const id=button.dataset.id;
   switch(button.dataset.action){
+    case 'photos':filters={...defaultFilters,brands:[],photoOnly:true};changed();$('#catalog').scrollIntoView({behavior:'smooth'});break;
     case 'reset':reset();break;
     case 'filters':$('#filters').classList.toggle('mobile-open');button.setAttribute('aria-expanded',$('#filters').classList.contains('mobile-open'));break;
     case 'saved':filters.savedOnly=!filters.savedOnly;changed();$('#catalog').scrollIntoView({behavior:'smooth'});break;
@@ -199,6 +205,7 @@ document.addEventListener('click',event=>{
   }
 });
 $('#search').addEventListener('input',e=>{filters.query=e.target.value;visibleCount=9;render();});
+$('#search').addEventListener('keydown',e=>{if(e.key==='Enter')$('#catalog').scrollIntoView({behavior:'smooth'});});
 $('#budget').addEventListener('input',e=>{filters.maxPrice=Number(e.target.value);$('#budget-display').textContent=money(filters.maxPrice).replace(' ₸','');visibleCount=9;render();$$('[data-budget]').forEach(b=>b.classList.toggle('active',Number(b.dataset.budget)===filters.maxPrice));});
 const controls={'sort':'sort','ram':'minRam','storage':'minStorage','gpu':'gpuType','cpu':'cpuFamily','weight':'maxWeight','gpu-model':'gpuQuery','os':'os','collection':'sourceKind','condition':'condition'};
 for(const [id,key] of Object.entries(controls)){$('#'+id)?.addEventListener('change',e=>{filters[key]=['minRam','minStorage','maxWeight'].includes(key)?Number(e.target.value):e.target.value;changed();});}
@@ -213,6 +220,7 @@ document.addEventListener('keydown',e=>{if(e.key==='/'&&!['INPUT','TEXTAREA','SE
 $$('dialog').forEach(dialog=>dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}}));
 $$('[data-icon]').forEach(el=>el.innerHTML=icon(el.dataset.icon));
 renderPurposes();updateGlobalState();
+initDashboard();
 translateDOM();
 initChat({getCatalog:()=>data,getFilters:()=>filters,onLaptop:id=>{$('#chat-dialog').close();showDetail(id);}});
 async function init(){
