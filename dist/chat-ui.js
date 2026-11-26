@@ -1,5 +1,5 @@
-import { createSuperman, SUPERMAN_MODEL } from './superman-engine.js';
-import { tr, localized, getLanguage, translateDOM } from './i18n.js';
+import { createSuperman, SUPERMAN_MODEL } from './superman-engine.js?v=dashboard-20261127';
+import { tr, localized, getLanguage, translateDOM } from './i18n.js?v=dashboard-20261127';
 
 export function initChat({getCatalog,getFilters,onLaptop}) {
  const dialog=document.querySelector('#chat-dialog');

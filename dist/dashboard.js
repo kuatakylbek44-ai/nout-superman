@@ -1,4 +1,4 @@
-import { localized, getLanguage } from './i18n.js';
+import { localized, getLanguage } from './i18n.js?v=dashboard-20261127';
 
 /** Summaries describe the bundled catalogue, never sales or visitor activity. */
 export function summarizeCatalog(data) {

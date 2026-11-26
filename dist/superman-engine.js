@@ -1,4 +1,4 @@
-import { defaultFilters, filterLaptops } from './catalog.js';
+import { defaultFilters, filterLaptops } from './catalog.js?v=dashboard-20261127';
 
 export const SUPERMAN_MODEL = Object.freeze({ id:'Qwen3-0.6B-q4f16_1-MLC', runtimeVersion:'0.2.89', estimatedDownloadMB:370, estimatedGpuMemoryMB:1404 });
 const RUNTIME_URL = 'https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.89/+esm';

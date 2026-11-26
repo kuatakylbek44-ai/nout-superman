@@ -93,14 +93,24 @@ The API implements input bounds, timeouts, exact-origin CORS, catalog-ID validat
 
 ## Publish on GitHub Pages
 
-Publish the **contents of `dist/`** as the Pages artifact. The directory already contains the deployable site; no bundling command is needed.
+The canonical site is **https://kuatakylbek44-ai.github.io/nout-superman/**. This repository publishes the **contents of `dist/`** from the root of the remote `gh-pages` branch. In **Settings → Pages**, the source is **Deploy from a branch → gh-pages → / (root)**. No bundling command or custom Actions workflow is needed.
 
-1. Push the project to the intended GitHub repository.
-2. In **Settings → Pages**, choose **GitHub Actions** as the publishing source.
-3. Configure a Pages workflow using `actions/configure-pages`, `actions/upload-pages-artifact` with `path: dist`, and `actions/deploy-pages`. Give the deployment `pages: write` and `id-token: write` permissions and the `github-pages` environment.
-4. Use the URL produced by the deployment, typically `https://<account>.github.io/<repository>/`.
+After committing and checking the changes on `main`, publish with the existing `github` remote (`https://github.com/kuatakylbek44-ai/nout-superman.git`). From the project directory in PowerShell:
 
-Follow GitHub's [custom Pages workflow documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages) for the supported action versions and deployment settings. Relative asset paths support repository-based Pages URLs.
+```powershell
+git push github main
+if ($LASTEXITCODE -ne 0) { throw 'Source push failed' }
+$pagesCommit = git subtree split --prefix=dist HEAD
+if ($LASTEXITCODE -ne 0) { throw 'Pages source split failed' }
+git push github "${pagesCommit}:gh-pages"
+if ($LASTEXITCODE -ne 0) { throw 'Pages push failed' }
+```
+
+Use the newly generated subtree commit for every publication. An existing local `deploy-pages` branch may point to an older release; do not publish it without regenerating it. A push to `main` alone does not update the Pages site. Wait for the Pages deployment to finish and verify the canonical site and its assets.
+
+The current asset release marker is `v=dashboard-20261127`. It is applied consistently to stylesheet URLs, the entry script, and local JavaScript module imports. For a future release, update every occurrence of that marker together so the browser loads one consistent module graph. GitHub Pages can cache responses for ten minutes; a fresh release URL such as [the dashboard release](https://kuatakylbek44-ai.github.io/nout-superman/?v=dashboard-20261127#overview) or a hard reload also refreshes a previously cached HTML entry point. Keep the canonical URL above for permanent links.
+
+The older `https://nomad-laptop-finder.kobeevalmas2.chatgpt.site/` is a separate Sites deployment. Publishing to GitHub does not update that mirror; it requires its own publication. Relative asset paths support the GitHub repository URL.
 
 GitHub Pages hosts static files and cannot execute `server/standalone.mjs`. The default browser AI mode runs on the visitor's device; remote AI requires a separately hosted endpoint. Deploying this repository does not create that service or configure provider credentials.
 
